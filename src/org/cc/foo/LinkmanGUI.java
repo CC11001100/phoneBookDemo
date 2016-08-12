@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * GUI负责交互，显示一些乱七八糟的丑得不行的界面   （View）
+ * GUI负责交互，显示一些乱七八糟丑得不行的界面   （View）
  * @author cc
  *
  */
 public class LinkmanGUI {
 
+	private LinkmanManager manager=LinkmanManager.getInstance();
 	private Scanner sc=new Scanner(System.in);
 	private String logo="";
 	
@@ -50,7 +51,7 @@ public class LinkmanGUI {
 		
 		Linkman e=readLinkman(null);
 		
-		boolean res=LinkmanManager.getInstance().add(e);
+		boolean res=manager.add(e);
 		
 		if(res){
 			System.out.println("√ 添加联系人成功：");
@@ -65,15 +66,20 @@ public class LinkmanGUI {
 	public void delete(){
 		System.out.println("电话本管理系统-->删除联系人");
 		
+		if(isEmpty()){
+			System.out.println("不能删除，电话本为空！");
+			return;
+		}
+		
 		showAllNames();
 		
 		String name=readLineNotSpace("请输入要删除的人的名字：");
 		
-		if(LinkmanManager.getInstance().load(name)==null){
+		if(manager.load(name)==null){
 			System.out.println("× 查无此人");
 		}else{
 			String comfirm=readLineNotSpace("确定删除？Y/N：");
-			if("Y".equalsIgnoreCase(comfirm) && LinkmanManager.getInstance().remove(name)){
+			if("Y".equalsIgnoreCase(comfirm) && manager.remove(name)){
 				System.out.println("√ 删除联系人"+name+"，您失去了一位朋友。");
 			}else{
 				System.out.println("× 未删除。");
@@ -84,15 +90,21 @@ public class LinkmanGUI {
 	//修改
 	public void modify(){
 		System.out.println("电话本管理系统-->修改联系人");
+		
+		if(isEmpty()){
+			System.out.println("不能修改，电话本为空！");
+			return ;
+		}
+		
 		showAllNames();
 		
 		String name=readLineNotSpace("请输入要修改的姓名：");
 		
-		if(LinkmanManager.getInstance().load(name)==null){
+		if(manager.load(name)==null){
 			System.out.println("× 此联系人不存在");
 		}else{
 			Linkman e=readLinkman(name);
-			LinkmanManager.getInstance().modify(name,e);
+			manager.modify(name,e);
 		}
 		
 	}
@@ -100,7 +112,13 @@ public class LinkmanGUI {
 	//显示所有联系人信息
 	public void queryAll(){
 		System.out.println("电话本管理系统-->所有联系人信息");
-		Linkman list[]=LinkmanManager.getInstance().list();
+		
+		if(isEmpty()){
+			System.out.println("电话本为空！");
+			return ;
+		}
+		
+		Linkman list[]=manager.list();
 		for(int i=0;i<list.length;i++){
 			System.out.println((i+1)+".\n"+list[i]);
 		}
@@ -110,9 +128,15 @@ public class LinkmanGUI {
 	//根据名字查询
 	public void queryByName(){
 		System.out.println("电话本管理系统-->根据名字查询");
+		
+		if(isEmpty()){
+			System.out.println("不能根据名字查询，电话本为空！");
+			return;
+		}
+		
 		showAllNames();
 		String name=readLineNotSpace("请输入名字查询详细信息：");
-		Linkman e=LinkmanManager.getInstance().load(name);
+		Linkman e=manager.load(name);
 		
 		if(e!=null){
 			System.out.println("\n"+e);
@@ -146,8 +170,8 @@ public class LinkmanGUI {
 		
 		e.setName(readLineNotSpace("姓名："));
 		
-		//不许重名
-		while(LinkmanManager.getInstance().load(e.getName())!=null && !e.getName().equalsIgnoreCase(name)){
+		//不许重名，但是修改的时候允许重名，嗯，就酱、
+		while(manager.load(e.getName())!=null && !e.getName().equalsIgnoreCase(name)){
 			e.setName(readLineNotSpace("联系人已存在，请重新输入姓名："));
 		}
 		
@@ -160,9 +184,15 @@ public class LinkmanGUI {
 		return e;
 	}
 	
+	//电话本是否为空
+	private boolean isEmpty(){
+		if(manager.count()==0) return true;
+		return false;
+	}
+	
 	//显示所有人的名字以方便用户操作，不然的话总感觉很...2b...
 	private void showAllNames(){
-		Linkman list[]=LinkmanManager.getInstance().list();
+		Linkman list[]=manager.list();
 		if(list.length==0) return;
 		
 		System.out.println("当前所有联系人：");
