@@ -42,6 +42,11 @@ public class LinkmanDao {
 			conn.commit();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 		}finally{
 			DbUtil.getInstance().close(conn);
 		}
@@ -70,6 +75,11 @@ public class LinkmanDao {
 			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		}finally{
 			DbUtil.getInstance().close(conn);
 		}
@@ -80,12 +90,38 @@ public class LinkmanDao {
 	 * @param e
 	 */
 	public void modify(Linkman e){
-		//修改的操作定义为先删除再添加(但是这个样子的话id会发生变化的)
+//		//修改的操作定义为先删除再添加(但是这个样子的话id会发生变化的)
+//		del(e.getId());
+//		add(e);
 		
-		String sql="";
+		Connection conn=null;
 		
-		del(e.getId());
-		add(e);
+		try {
+			conn=DbUtil.getInstance().getConnection();
+			conn.setAutoCommit(false);
+			
+			String sql="DELETE FROM t_phonenumber WHERE id=?";
+			dml(conn,sql,e.getId());
+			
+			sql="INSERT INTO t_phonenumber (id,phoneNumber) VALUES (?,?)";
+			for(int i=0;i<e.getPhoneNumber().size();i++){
+				dml(conn,sql,e.getId(),e.getPhoneNumber().get(i));
+			}
+			
+			sql="UPDATE t_phonebook SET name=?, sex=?, age=?, qq=?, address=?, comment=? WHERE id=?";
+			dml(conn,sql,e.getName(),e.getSex(),e.getAge(),e.getQq(),e.getAddress(),e.getDesc(),e.getId());
+			
+			conn.commit();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}finally{
+			DbUtil.getInstance().close(conn);
+		}
 	}
 	
 	/**
@@ -102,8 +138,9 @@ public class LinkmanDao {
 	 * @param conn
 	 * @param sql
 	 * @param args
+	 * @throws SQLException 
 	 */
-	public void dml(Connection conn,String sql,Object ...args){
+	public void dml(Connection conn,String sql,Object ...args) throws SQLException{
 		
 		PreparedStatement pstmt=null;
 		
@@ -118,6 +155,7 @@ public class LinkmanDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
 		}finally{
 			DbUtil.getInstance().close(pstmt);
 		}

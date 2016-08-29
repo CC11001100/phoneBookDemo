@@ -3,6 +3,7 @@ package org.cc.phoneBook.gui;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
 
@@ -22,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.Window.Type;
 
 public class MyDialogPanel extends JDialog {
 	private JTextField textField;
@@ -39,12 +41,13 @@ public class MyDialogPanel extends JDialog {
 	private int operType;
 	private Linkman data;
 	
-	public MyDialogPanel(Linkman e, final int operType) {
+	public MyDialogPanel(Linkman e, final int operType,Color color) {
 		this.data=e;
 		this.operType=operType;
 		
 		setTitle("添加联系人");
 		
+		setBackground(color);
 		setSize(251,366);
 //		setLocation(new Point(ScreenUtil.getLocationOnFooCenter(getWidth(),getHeight(),MainFrame.FRAME_WIDTH,MainFrame.HEIGHT)));
 		

@@ -113,7 +113,7 @@ public class CardItem extends JPanel {
 				lastClicked=System.currentTimeMillis();
 				if(System.currentTimeMillis()-t<500){
 					//500毫秒内单击两次认为是双击
-					MyDialogPanel dialog=new MyDialogPanel(CardItem.this.data,MyDialogPanel.MODIFY);
+					MyDialogPanel dialog=new MyDialogPanel(CardItem.this.data,MyDialogPanel.MODIFY,CardItem.this.getBackground());
 					dialog.setVisible(true);
 				}
 			}

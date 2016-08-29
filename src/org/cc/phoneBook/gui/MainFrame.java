@@ -46,7 +46,7 @@ public class MainFrame extends JFrame {
 		setLocation(ScreenUtil.getScreenCenter(FRAME_WIDTH,FRAME_HEIGHT));
 		
 		setBackground(new Color(1,161,135));
-		
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -81,7 +81,7 @@ public class MainFrame extends JFrame {
 		label_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MyDialogPanel dialog=new MyDialogPanel(null,MyDialogPanel.ADD);
+				MyDialogPanel dialog=new MyDialogPanel(null,MyDialogPanel.ADD,new Color(31,207,109));
 				dialog.setVisible(true);
 			}
 		});
