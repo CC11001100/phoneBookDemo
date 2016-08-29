@@ -81,6 +81,9 @@ public class LinkmanDao {
 	 */
 	public void modify(Linkman e){
 		//修改的操作定义为先删除再添加(但是这个样子的话id会发生变化的)
+		
+		String sql="";
+		
 		del(e.getId());
 		add(e);
 	}

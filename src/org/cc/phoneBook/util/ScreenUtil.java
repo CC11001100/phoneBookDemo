@@ -23,4 +23,9 @@ public class ScreenUtil {
 		return Toolkit.getDefaultToolkit().getScreenSize();
 	}
 	
+	//如果与某元素居中的话那么偏移量是多少呢
+	public static Point getLocationOnFooCenter(int w,int h,int pw,int ph){
+		return new Point((pw-w)/2,(ph-h)/2);
+	}
+	
 }
